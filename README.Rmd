@@ -7,9 +7,7 @@ output: github_document
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+  comment = "#>"
 )
 ```
 # dfprint
@@ -36,13 +34,6 @@ of variables, robust printing of list columns, better use of screen-estate,
 and better handling of some exotic phenomena such as list columns with symbol elements or 2-d columns.
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
-```{r, include = FALSE}
 old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
 options(width = 80)
 ```
@@ -51,13 +42,16 @@ options(width = 80)
 library(dfprint)
 ```
 
-Example (note the order of Species factor levels is showing on the right):
+The readme files on GitHub do not seem to support ANSI formatting, so you better
+be viewing this page on the package website.
 
 ```{r}
 set.seed(1)
 iris2 = iris[sample.int(nrow(iris), nrow(iris)), ]
 iris2
 ```
+
+See `vignette("print-data-frames")` for more examples and additional info.
 
 ## Dependencies
 

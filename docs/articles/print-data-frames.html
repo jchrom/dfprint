@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>But data frames already have a print method! • dfprint</title>
+<title>Printing data frames • dfprint</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="But data frames already have a print method!">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Printing data frames">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/print-data-frames.html">But data frames already have a print method!</a>
+      <a href="../articles/print-data-frames.html">Printing data frames</a>
     </li>
   </ul>
 </li>
@@ -72,7 +72,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>But data frames already have a print method!</h1>
+      <h1>Printing data frames</h1>
             
       
       
@@ -82,10 +82,8 @@
 
     
     
+<p><strong>“But data frames already have a print method!”</strong></p>
 <p>They do. But it falls short in a few few well-known respects which, at least in part, motivated the “Tidyverse” folks to reimagine data frames altogether. I’m going to go through these issues in order (of how much they annoy me).</p>
-<div id="issues-with-base-print" class="section level2">
-<h2 class="hasAnchor">
-<a href="#issues-with-base-print" class="anchor"></a>Issues with base print</h2>
 <p><strong>1. Large data frames print poorly.</strong> Tinkering with <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code> and <code><a href="https://rdrr.io/r/utils/head.html">head()</a></code> is not fun. Lists of data frames may even hang R when printed in full.</p>
 <p><strong>2. Lack of metadata.</strong> These are typically obtained by <code><a href="https://rdrr.io/r/utils/str.html">str()</a></code>, <code><a href="https://rdrr.io/r/base/dim.html">dim()</a></code> and <code><a href="https://rdrr.io/r/utils/object.size.html">object.size()</a></code>, at the cost of additional typing and scrolling, as the original output gets displaced by the subsequent calls.</p>
 <p><strong>3. Too plain.</strong> Less is not always more. ANSI formatting would help to tell apart factor from character, lists from atomic vectors etc.</p>
@@ -115,25 +113,27 @@
 <a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; 1 1       a       A       2</span></a>
 <a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; 2 2       b       B       3</span></a></code></pre></div>
 <p>There is no way of telling that the first <code>child.y</code> is a regular column, while the rest belongs to the child data frame. The “dot syntax” just does not help.</p>
-</div>
 <div id="burn-it-all-down" class="section level2">
 <h2 class="hasAnchor">
 <a href="#burn-it-all-down" class="anchor"></a>Burn it all down</h2>
-<p>Using <em><a href="https://tibble.tidyverse.org/articles/tibble.html#tibbles-vs-data-frames">tibbles</a></em> solves these problems nicely, but not for data frames. Thus, if you want to use their nice print method, you have to first coerce your data frame into a tibble. This is something you may not want, because the behavior of data frames and tibbles is not the same, or because some R functions expect a data frame, or simply because it is a bit annoying having to do that every single time.</p>
-<p>To use <em>dfprint</em>, just load the package in the usual way. Data frames will now print nicely.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dfprint)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; Registered S3 method overwritten by 'dfprint':</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;   method           from</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;   print.data.frame base</span></a></code></pre></div>
-<p>Oh no, is the base print method being overloaded?! Yes. Yes it is.</p>
+<p>Using <em><a href="https://tibble.tidyverse.org/articles/tibble.html#tibbles-vs-data-frames">tibbles</a></em> solves these problems nicely, but not for data frames. Thus, if you want to use their nice print method, you have to first coerce your data frame into a tibble. This is something you may not always want, be it because tibbles behave in a slightly different way than data frames, or because some R functions expect a data frame. If you don’t mind that, you can do this for usage in interactive sessions:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">print.data.frame =<span class="st"> </span><span class="cf">function</span>(df) <span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(tibble<span class="op">::</span><span class="kw"><a href="https://tibble.tidyverse.org/reference/as_tibble.html">as_tibble</a></span>(df))</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(print.data.frame) <span class="co"># when you no longer need it</span></a></code></pre></div>
+<p>Note that this will fail when POSIXlt columns are present, and will drop row names.</p>
+<p>If you don’t want to go the tibble route, the <em>dfprint</em> package is your friend. Just load it in the usual way, and data frames will print nicely until you detach it.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dfprint)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt; Registered S3 method overwritten by 'dfprint':</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;   method           from</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt;   print.data.frame base</span></a></code></pre></div>
+<p>Ah yes, it does overload the base print method for data frames.</p>
 </div>
-<div id="thats-scary-is-it-worth-it" class="section level2">
+<div id="is-it-worth-it" class="section level2">
 <h2 class="hasAnchor">
-<a href="#thats-scary-is-it-worth-it" class="anchor"></a>That’s scary! Is it worth it?</h2>
+<a href="#is-it-worth-it" class="anchor"></a>Is it worth it?</h2>
 <p>I let you decide. In the meantime, let’s have a look at how it prints. Here is the <code>iris</code> data set with scrambled rows. I scrambled the rows so you can see the factor ordering properly:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">iris2 =<span class="st"> </span>iris[<span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample.int</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(iris)), ]</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">iris2</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">iris2 =<span class="st"> </span>iris[<span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample.int</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(iris)), ]</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">iris2</a></code></pre></div>
 <pre class="fansi fansi-output"><code>#&gt; <span style="color: #949494;"># data.frame 150 rows, 5 columns (7.7 Kb)</span><span> 
 #&gt; </span><span style="color: #949494;font-style: italic;">   </span><span> </span><span style="font-weight: bold;">Sepal.Length</span><span> </span><span style="font-weight: bold;">Sepal.Width</span><span> </span><span style="font-weight: bold;">Petal.Length</span><span> </span><span style="font-weight: bold;">Petal.Width</span><span> </span><span style="font-weight: bold;">     Species</span><span>
 #&gt; </span><span style="color: #949494;font-style: italic;">   </span><span> </span><span style="color: #949494;font-style: italic;">         dbl</span><span> </span><span style="color: #949494;font-style: italic;">        dbl</span><span> </span><span style="color: #949494;font-style: italic;">         dbl</span><span> </span><span style="color: #949494;font-style: italic;">        dbl</span><span> </span><span style="color: #949494;font-style: italic;">      factor</span><span>
@@ -156,9 +156,9 @@
 <li><p>The footer is telling you how many rows are displayed. If you need more, use the the <code>n</code> argument, eg, <code><a href="https://rdrr.io/r/base/print.html">print(iris2, n = 20)</a></code>. Use <code>Inf</code> to print all rows.</p></li>
 </ul>
 <p>When a data frame is bit wider, the names and summaries of the overflowing columns are displayed below.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">iris3 =<span class="st"> </span>iris2[, <span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample.int</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(iris2), <span class="dv">8</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)]</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">iris3</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">iris3 =<span class="st"> </span>iris2[, <span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample.int</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(iris2), <span class="dv">8</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)]</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">iris3</a></code></pre></div>
 <pre class="fansi fansi-output"><code>#&gt; <span style="color: #949494;"># data.frame 150 rows, 8 columns (11.5 Kb)</span><span> 
 #&gt; </span><span style="color: #949494;font-style: italic;">   </span><span> </span><span style="font-weight: bold;">Sepal.Length</span><span> </span><span style="font-weight: bold;">Petal.Width</span><span> </span><span style="font-weight: bold;">Sepal.Length.1</span><span> </span><span style="font-weight: bold;">Sepal.Width</span><span> </span><span style="font-weight: bold;">     Species</span><span>
 #&gt; </span><span style="color: #949494;font-style: italic;">   </span><span> </span><span style="color: #949494;font-style: italic;">         dbl</span><span> </span><span style="color: #949494;font-style: italic;">        dbl</span><span> </span><span style="color: #949494;font-style: italic;">           dbl</span><span> </span><span style="color: #949494;font-style: italic;">        dbl</span><span> </span><span style="color: #949494;font-style: italic;">      factor</span><span>
@@ -175,7 +175,7 @@
 #&gt; </span><span style="color: #949494;"># 3 additional columns:</span><span> Petal.Length </span><span style="color: #949494;">(dbl)</span><span> Sepal.Width.1 </span><span style="color: #949494;">(dbl)</span><span> Petal.Length.1 </span><span style="color: #949494;">(dbl)</span><span>
 </span></code></pre>
 <p>Row names are preserved:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">mtcars[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, ]</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">mtcars[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, ]</a></code></pre></div>
 <pre class="fansi fansi-output"><code>#&gt; <span style="color: #949494;"># data.frame 4 rows, 11 columns (2.6 Kb)</span><span> 
 #&gt; </span><span style="color: #949494;font-style: italic;">              </span><span> </span><span style="font-weight: bold;">mpg</span><span> </span><span style="font-weight: bold;">cyl</span><span> </span><span style="font-weight: bold;">disp</span><span> </span><span style="font-weight: bold;"> hp</span><span> </span><span style="font-weight: bold;">drat</span><span> </span><span style="font-weight: bold;"> wt</span><span> </span><span style="font-weight: bold;">qsec</span><span> </span><span style="font-weight: bold;"> vs</span><span> </span><span style="font-weight: bold;"> am</span><span> </span><span style="font-weight: bold;">gear</span><span> </span><span style="font-weight: bold;">carb</span><span>
 #&gt; </span><span style="color: #949494;font-style: italic;">              </span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span>
@@ -185,19 +185,19 @@
 #&gt; </span><span style="color: #949494;font-style: italic;">Hornet 4 Drive</span><span>  21   6  258 110  3.1 3.2   19   1   0    3    1
 </span></code></pre>
 <p>And what about those failed examples from before? Here is the “unprintable” data frame with some additional list columns added:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">df<span class="op">$</span>li2 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(mtcars, letters)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">df<span class="op">$</span>li3 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(mean, <span class="op">~</span>x)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">df</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">df<span class="op">$</span>li2 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(mtcars, letters)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">df<span class="op">$</span>li3 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(mean, <span class="op">~</span>x)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">df</a></code></pre></div>
 <pre class="fansi fansi-output"><code>#&gt; <span style="color: #949494;"># data.frame 2 rows, 4 columns (11.8 Kb)</span><span> 
 #&gt; </span><span style="color: #949494;font-style: italic;"> </span><span> </span><span style="font-weight: bold;">  a</span><span> </span><span style="font-weight: bold;">      li</span><span> </span><span style="font-weight: bold;">        li2</span><span> </span><span style="font-weight: bold;">       li3</span><span>
 #&gt; </span><span style="color: #949494;font-style: italic;"> </span><span> </span><span style="color: #949494;font-style: italic;">int</span><span> </span><span style="color: #949494;font-style: italic;">     lst</span><span> </span><span style="color: #949494;font-style: italic;">        lst</span><span> </span><span style="color: #949494;font-style: italic;">       lst</span><span>
 #&gt; </span><span style="color: #949494;font-style: italic;">1</span><span>   1 </span><span style="color: #949494;">[symbol]</span><span> </span><span style="color: #949494;">[df, 32x11]</span><span> </span><span style="color: #949494;">[function]</span><span>
 #&gt; </span><span style="color: #949494;font-style: italic;">2</span><span>   2 </span><span style="color: #949494;">[symbol]</span><span> </span><span style="color: #949494;">  [chr, 26]</span><span> </span><span style="color: #949494;"> [formula]</span><span>
 </span></code></pre>
-<p>Prints out no problem. List column include summaries of their elements instead of the values themselves, which saves space and is often more informative.</p>
+<p>Prints out no problem. List columns include summaries of their elements instead of the values themselves, which saves space and is often more informative.</p>
 <p>Now for the data frame column - and let’s also add a matrix column:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">df_parent<span class="op">$</span>m =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">df_parent</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">df_parent<span class="op">$</span>m =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">df_parent</a></code></pre></div>
 <pre class="fansi fansi-output"><code>#&gt; <span style="color: #949494;"># data.frame 2 rows, 4 columns (3.1 Kb)</span><span> 
 #&gt; </span><span style="color: #949494;font-style: italic;"> </span><span> </span><span style="font-weight: bold;">  x</span><span> </span><span style="font-weight: bold;">child.y</span><span> </span><span style="font-weight: bold;">child$y</span><span> </span><span style="font-weight: bold;">child$z</span><span> </span><span style="font-weight: bold;">m[,1]</span><span> </span><span style="font-weight: bold;">m[,2]</span><span>
 #&gt; </span><span style="color: #949494;font-style: italic;"> </span><span> </span><span style="color: #949494;font-style: italic;">int</span><span> </span><span style="color: #949494;font-style: italic;"> factor</span><span> </span><span style="color: #949494;font-style: italic;"> factor</span><span> </span><span style="color: #949494;font-style: italic;">    int</span><span> </span><span style="color: #949494;font-style: italic;">  int</span><span> </span><span style="color: #949494;font-style: italic;">  int</span><span>
@@ -210,10 +210,10 @@
 <h2 class="hasAnchor">
 <a href="#options" class="anchor"></a>Options</h2>
 <p>If your terminal does not fully support ANSI formatting, you can turn selected features off.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="dt">dfprint_strong =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co"># Column headers are no longer bold:</span></a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">mtcars</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="dt">dfprint_strong =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co"># Column headers are no longer bold:</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">mtcars</a></code></pre></div>
 <pre class="fansi fansi-output"><code>#&gt; <span style="color: #949494;"># data.frame 32 rows, 11 columns (7 Kb)</span><span> 
 #&gt; </span><span style="color: #949494;font-style: italic;">                 </span><span> mpg cyl disp  hp drat  wt qsec  vs  am gear carb
 #&gt; </span><span style="color: #949494;font-style: italic;">                 </span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;">dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span> </span><span style="color: #949494;font-style: italic;"> dbl</span><span>
@@ -236,37 +236,37 @@
 <p>The downside of overloading the base print method is that the R CMD check returns a warning. This means that <em>dfprint</em> will never make it to CRAN. If you want your package to be on CRAN, importing <em>dfprint</em> is probably not an option. On the other hand, if you are happy with people getting your package from GitHub, you should be fine.</p>
 <p><em>dfprint</em> has no dependencies apart from what comes with base R (ie. <em>stats</em> and <em>utils</em>). And while it is true that more dependencies is not always bad, it is <a href="https://www.tidyverse.org/blog/2019/05/itdepends/">worth thinking about</a>. In that regard, <em>dfprint</em> is a lean and leightweight choice.</p>
 <p>Interactive use has much fewer constraints. I find myself using it all the time when inspecting data frames, without necessarily including it as a dependency in my projects.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt; R version 3.6.2 (2019-12-12)</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt; Running under: elementary OS 5.1.2 Hera</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; Matrix products: default</span></a>
-<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.7.1</span></a>
-<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.7.1</span></a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt; locale:</span></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt;  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              </span></a>
-<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt;  [3] LC_TIME=cs_CZ.UTF-8        LC_COLLATE=en_GB.UTF-8    </span></a>
-<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#&gt;  [5] LC_MONETARY=cs_CZ.UTF-8    LC_MESSAGES=en_GB.UTF-8   </span></a>
-<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt;  [7] LC_PAPER=cs_CZ.UTF-8       LC_NAME=C                 </span></a>
-<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></a>
-<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; [11] LC_MEASUREMENT=cs_CZ.UTF-8 LC_IDENTIFICATION=C       </span></a>
-<a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="co">#&gt; attached base packages:</span></a>
-<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></a>
-<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#&gt; other attached packages:</span></a>
-<a class="sourceLine" id="cb10-22" data-line-number="22"><span class="co">#&gt; [1] dfprint_0.0.0.9000</span></a>
-<a class="sourceLine" id="cb10-23" data-line-number="23"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb10-24" data-line-number="24"><span class="co">#&gt; loaded via a namespace (and not attached):</span></a>
-<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="co">#&gt;  [1] Rcpp_1.0.2       fansi_0.4.0      rprojroot_1.3-2  crayon_1.3.4    </span></a>
-<a class="sourceLine" id="cb10-26" data-line-number="26"><span class="co">#&gt;  [5] digest_0.6.23    assertthat_0.2.1 MASS_7.3-51.5    R6_2.4.0        </span></a>
-<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="co">#&gt;  [9] backports_1.1.5  magrittr_1.5     evaluate_0.14    stringi_1.4.3   </span></a>
-<a class="sourceLine" id="cb10-28" data-line-number="28"><span class="co">#&gt; [13] rlang_0.4.4      rstudioapi_0.10  fs_1.3.1         rmarkdown_1.13  </span></a>
-<a class="sourceLine" id="cb10-29" data-line-number="29"><span class="co">#&gt; [17] pkgdown_1.4.1    desc_1.2.0       tools_3.6.2      stringr_1.4.0   </span></a>
-<a class="sourceLine" id="cb10-30" data-line-number="30"><span class="co">#&gt; [21] yaml_2.2.0       xfun_0.7         compiler_3.6.2   memoise_1.1.0   </span></a>
-<a class="sourceLine" id="cb10-31" data-line-number="31"><span class="co">#&gt; [25] htmltools_0.3.6  knitr_1.23</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; R version 3.6.2 (2019-12-12)</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">#&gt; Running under: elementary OS 5.1.2 Hera</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#&gt; Matrix products: default</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.7.1</span></a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.7.1</span></a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt; locale:</span></a>
+<a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt;  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              </span></a>
+<a class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">#&gt;  [3] LC_TIME=cs_CZ.UTF-8        LC_COLLATE=en_GB.UTF-8    </span></a>
+<a class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">#&gt;  [5] LC_MONETARY=cs_CZ.UTF-8    LC_MESSAGES=en_GB.UTF-8   </span></a>
+<a class="sourceLine" id="cb11-14" data-line-number="14"><span class="co">#&gt;  [7] LC_PAPER=cs_CZ.UTF-8       LC_NAME=C                 </span></a>
+<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></a>
+<a class="sourceLine" id="cb11-16" data-line-number="16"><span class="co">#&gt; [11] LC_MEASUREMENT=cs_CZ.UTF-8 LC_IDENTIFICATION=C       </span></a>
+<a class="sourceLine" id="cb11-17" data-line-number="17"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb11-18" data-line-number="18"><span class="co">#&gt; attached base packages:</span></a>
+<a class="sourceLine" id="cb11-19" data-line-number="19"><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></a>
+<a class="sourceLine" id="cb11-20" data-line-number="20"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb11-21" data-line-number="21"><span class="co">#&gt; other attached packages:</span></a>
+<a class="sourceLine" id="cb11-22" data-line-number="22"><span class="co">#&gt; [1] dfprint_0.0.0.9000</span></a>
+<a class="sourceLine" id="cb11-23" data-line-number="23"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb11-24" data-line-number="24"><span class="co">#&gt; loaded via a namespace (and not attached):</span></a>
+<a class="sourceLine" id="cb11-25" data-line-number="25"><span class="co">#&gt;  [1] Rcpp_1.0.2       fansi_0.4.0      rprojroot_1.3-2  crayon_1.3.4    </span></a>
+<a class="sourceLine" id="cb11-26" data-line-number="26"><span class="co">#&gt;  [5] digest_0.6.23    assertthat_0.2.1 MASS_7.3-51.5    R6_2.4.0        </span></a>
+<a class="sourceLine" id="cb11-27" data-line-number="27"><span class="co">#&gt;  [9] backports_1.1.5  magrittr_1.5     evaluate_0.14    stringi_1.4.3   </span></a>
+<a class="sourceLine" id="cb11-28" data-line-number="28"><span class="co">#&gt; [13] rlang_0.4.4      rstudioapi_0.10  fs_1.3.1         rmarkdown_1.13  </span></a>
+<a class="sourceLine" id="cb11-29" data-line-number="29"><span class="co">#&gt; [17] pkgdown_1.4.1    desc_1.2.0       tools_3.6.2      stringr_1.4.0   </span></a>
+<a class="sourceLine" id="cb11-30" data-line-number="30"><span class="co">#&gt; [21] yaml_2.2.0       xfun_0.7         compiler_3.6.2   memoise_1.1.0   </span></a>
+<a class="sourceLine" id="cb11-31" data-line-number="31"><span class="co">#&gt; [25] htmltools_0.3.6  knitr_1.23</span></a></code></pre></div>
 </div>
   </div>
 
@@ -275,9 +275,8 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#issues-with-base-print">Issues with base print</a></li>
-      <li><a href="#burn-it-all-down">Burn it all down</a></li>
-      <li><a href="#thats-scary-is-it-worth-it">That’s scary! Is it worth it?</a></li>
+<li><a href="#burn-it-all-down">Burn it all down</a></li>
+      <li><a href="#is-it-worth-it">Is it worth it?</a></li>
       <li><a href="#options">Options</a></li>
       <li><a href="#using-dfprint-in-other-packages">Using dfprint in other packages</a></li>
       </ul>

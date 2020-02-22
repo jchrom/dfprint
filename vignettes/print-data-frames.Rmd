@@ -1,5 +1,5 @@
 ---
-title: "But data frames already have a print method!"
+title: "Printing data frames"
 ---
 
 ```{r, include = FALSE}
@@ -14,12 +14,11 @@ old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
 options(width = 80)
 ```
 
+**"But data frames already have a print method!"**
+
 They do. But it falls short in a few few well-known respects which, at least
 in part, motivated the "Tidyverse" folks to reimagine data frames altogether.
 I'm going to go through these issues in order (of how much they annoy me).
-
-Issues with base print
-----------------------
 
 **1. Large data frames print poorly.** Tinkering with `[[` and `head()` is not
 fun. Lists of data frames may even hang R when printed in full.
@@ -73,21 +72,31 @@ Burn it all down
 Using *[tibbles](https://tibble.tidyverse.org/articles/tibble.html#tibbles-vs-data-frames)*
 solves these problems nicely, but not for data frames. Thus, if you want to use
 their nice print method, you have to first coerce your data frame into a tibble.
-This is something you may not want, because the behavior of data frames and
-tibbles is not the same, or because some R functions expect a data frame,
-or simply because it is a bit annoying having to do that every single time.
+This is something you may not always want, be it because tibbles behave
+in a slightly different way than data frames, or because some R functions expect
+a data frame. If you don't mind that, you can do this for usage in interactive
+sessions:
 
-To use *dfprint*, just load the package in the usual way. Data frames will now
-print nicely.
+```r
+print.data.frame = function(df) print(tibble::as_tibble(df))
+rm(print.data.frame) # when you no longer need it
+```
+
+Note that this will fail when POSIXlt columns are present, and will drop row
+names.
+
+If you don't want to go the tibble route, the *dfprint* package is your friend.
+Just load it in the usual way, and data frames will print nicely until you
+detach it.
 
 ```{r}
 library(dfprint)
 ```
 
-Oh no, is the base print method being overloaded?! Yes. Yes it is.
+Ah yes, it does overload the base print method for data frames.
 
-That's scary! Is it worth it?
------------------------------
+Is it worth it?
+---------------
 
 I let you decide. In the meantime, let's have a look at how it prints. Here is
 the `iris` data set with scrambled rows. I scrambled the rows so you can see

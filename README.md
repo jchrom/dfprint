@@ -35,8 +35,8 @@ library(dfprint)
 #>   print.data.frame base
 ```
 
-Example (note the order of Species factor levels is showing on the
-right):
+The readme files on GitHub do not seem to support ANSI formatting, so
+you better be viewing this page on the package website.
 
 ``` r
 set.seed(1)
@@ -58,6 +58,9 @@ iris2
 #&gt; </span><span style='color: #949494;font-style: italic;'> 74</span><span>          6.1         2.8          4.7         1.2 versicolor</span><span style='color: #949494;'>|2</span><span>
 #&gt; </span><span style='color: #949494;'># showing 9 rows out of 150</span><span>
 </span></CODE></PRE>
+
+See `vignette("print-data-frames")` for more examples and additional
+info.
 
 ## Dependencies
 
