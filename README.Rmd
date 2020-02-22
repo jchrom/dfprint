@@ -1,0 +1,66 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# dfprint
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
+
+The goal of `dfprint` is to provide a nicer print method for data frames,
+inspired by tibbles.
+
+## Installation
+
+You can install `dfprint` from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("jchrom/dfprint")
+```
+## How does it print
+
+`dfprint` includes text formatting, additional information such as type/class
+of variables, robust printing of list columns, better use of screen-estate,
+and better handling of some exotic phenomena such as list columns with symbol elements or 2-d columns.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, include = FALSE}
+old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
+options(width = 80)
+```
+
+```{r example}
+library(dfprint)
+```
+
+Example (note the order of Species factor levels is showing on the right):
+
+```{r}
+set.seed(1)
+iris2 = iris[sample.int(nrow(iris), nrow(iris)), ]
+iris2
+```
+
+## Dependencies
+
+Only what comes with base R. If your terminal does not fully support ANSI strings,
+use `options()` to disable offending features, eg.
+`options(dfprint_strong = FALSE)`.

@@ -1,0 +1,17 @@
+Package: dfprint
+Title: Print data frames in a nice way
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Jakub", family = "Chromec", role = c("aut", "cre"),
+           email = "chromec.jakub@gmail.com")
+Description: This package provides a print method for data frames. It includes
+    lightweight text formatting, additional information from dim(), str()
+    and object.size(), better use of screen-estate, and better handling of some
+    exotic phenomena such as list columns with symbol elements or 2-d columns.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+Roxygen: list(markdown = TRUE)
+Suggests: 
+    rmarkdown

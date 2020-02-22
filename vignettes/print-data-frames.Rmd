@@ -1,0 +1,191 @@
+---
+title: "But data frames already have a print method!"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, include = FALSE}
+old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
+options(width = 80)
+```
+
+They do. But it falls short in a few few well-known respects which, at least
+in part, motivated the "Tidyverse" folks to reimagine data frames altogether.
+I'm going to go through these issues in order (of how much they annoy me).
+
+Issues with base print
+----------------------
+
+**1. Large data frames print poorly.** Tinkering with `[[` and `head()` is not
+fun. Lists of data frames may even hang R when printed in full.
+
+**2. Lack of metadata.** These are typically obtained by `str()`, `dim()` and
+`object.size()`, at the cost of additional typing and scrolling, as the original
+output gets displaced by the subsequent calls.
+
+**3. Too plain.** Less is not always more. ANSI formatting would help to tell 
+apart factor from character, lists from atomic vectors etc.
+
+**4. Valid inputs can produce an error.** For example:
+
+```{r, error = TRUE}
+li = list(as.symbol("a"), as.symbol("b"))
+df = data.frame(a = 1:2)
+
+df$li = li
+
+df
+```
+
+The above is a data frame that cannot be printed because its list column `li`
+includes symbol elements. Not a frequent use case, but should be handled as well.
+
+**5. And then there is this:** Data frames can have columns which themselves are
+dataframes (or matrices or arrays). One place where you can see this is when you
+parse JSON data structures, eg. using `jsonlinte::fromJSON()`. Can you tell from
+the printout below which columns belong to the data frame column?
+
+```{r}
+df_parent = data.frame(x = 1:2, child.y = letters[1:2])
+df_child  = data.frame(y = LETTERS[1:2], z = 2:3)
+
+# Add child data frame as a column to the parent.
+df_parent$child = df_child
+
+# Check the number of columns
+ncol(df_parent)
+
+# Print out the result.
+df_parent
+```
+
+There is no way of telling that the first `child.y` is a regular column, while
+the rest belongs to the child data frame. The "dot syntax" just does not help.
+
+Burn it all down
+----------------
+
+Using *[tibbles](https://tibble.tidyverse.org/articles/tibble.html#tibbles-vs-data-frames)*
+solves these problems nicely, but not for data frames. Thus, if you want to use
+their nice print method, you have to first coerce your data frame into a tibble.
+This is something you may not want, because the behavior of data frames and
+tibbles is not the same, or because some R functions expect a data frame,
+or simply because it is a bit annoying having to do that every single time.
+
+To use *dfprint*, just load the package in the usual way. Data frames will now
+print nicely.
+
+```{r}
+library(dfprint)
+```
+
+Oh no, is the base print method being overloaded?! Yes. Yes it is.
+
+That's scary! Is it worth it?
+-----------------------------
+
+I let you decide. In the meantime, let's have a look at how it prints. Here is
+the `iris` data set with scrambled rows. I scrambled the rows so you can see
+the factor ordering properly:
+
+```{r}
+set.seed(1)
+iris2 = iris[sample.int(nrow(iris)), ]
+iris2
+```
+
+Things to point out:
+
+* The number of rows and columns is printed at the top, along with the amount
+  of RAM allocated.
+  
+* Column headers include object type. For objects with a "class" attribute set
+  (such as factors or datetimes), class is shown instead of type. Datetime
+  columns (POSIXct and POSIXlt) also show the timezone.
+  
+* Factors display their underlying integer values to make their ordering a bit
+  more obvious. This may be useful for eg. plotting.
+  
+* The footer is telling you how many rows are displayed. If you need more, use
+  the the `n` argument, eg, `print(iris2, n = 20)`. Use `Inf` to print all rows.
+  
+When a data frame is bit wider, the names and summaries of the overflowing
+columns are displayed below.
+
+```{r}
+set.seed(1)
+iris3 = iris2[, sample.int(ncol(iris2), 8, replace = TRUE)]
+iris3
+```
+
+Row names are preserved:
+
+```{r}
+mtcars[1:4, ]
+```
+
+And what about those failed examples from before? Here is the "unprintable"
+data frame with some additional list columns added:
+
+```{r}
+df$li2 = list(mtcars, letters)
+df$li3 = list(mean, ~x)
+df
+```
+
+Prints out no problem. List columns include summaries of their elements instead
+of the values themselves, which saves space and is often more informative.
+
+Now for the data frame column - and let's also add a matrix column:
+
+```{r}
+df_parent$m = matrix(1:4, ncol = 2)
+df_parent
+```
+
+The `$` and `[` make it obvious that these columns belong to 2-d structures. Note
+that the number of columns stated above is correct, because `child` (not
+`child.y`) and `m` are each a single 2-d column.
+
+Options
+-------
+
+If your terminal does not fully support ANSI formatting, you can turn selected
+features off.
+
+```{r}
+options(dfprint_strong = FALSE)
+
+# Column headers are no longer bold:
+mtcars
+```
+
+Use `dfprint_italic = FALSE` and `dfprint_subtle = FALSE` to disable individual
+features, or `dfprint_enable = FALSE` to revert back to base print method.
+
+Using dfprint in other packages
+-------------------------------
+
+The downside of overloading the base print method is that the R CMD check returns
+a warning. This means that *dfprint* will never make it to CRAN. If you want your
+package to be on CRAN, importing *dfprint* is probably not an option.
+On the other hand, if you are happy with people getting your package from GitHub,
+you should be fine.
+
+*dfprint* has no dependencies apart from what comes with base R (ie. *stats*
+and *utils*). And while it is true that more dependencies is not always bad, it
+is [worth thinking about](https://www.tidyverse.org/blog/2019/05/itdepends/). In
+that regard, *dfprint* is a lean and leightweight choice.
+
+Interactive use has much fewer constraints. I find myself using it all the time
+when inspecting data frames, without necessarily including it as a dependency
+in my projects.
+
+```{r}
+sessionInfo()
+```
