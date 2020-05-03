@@ -6,22 +6,22 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Print data frames in a nice way • dfprint</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Print data frames in a nice way">
 <meta property="og:description" content="This package provides a print method for data frames. It includes
     lightweight text formatting, additional information from dim(), str()
     and object.size(), better use of screen-estate, and better handling of some
     exotic phenomena such as list columns with symbol elements or 2-d columns.">
-<meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -79,51 +79,29 @@
 <a href="#dfprint" class="anchor"></a>dfprint</h1></div>
 <!-- badges: start -->
 
-<p>The goal of <code>dfprint</code> is to provide a nicer print method for data frames, inspired by tibbles.</p>
+<p>The goal of <code>dfprint</code> is to provide a nicer print method for data frames.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install <code>dfprint</code> from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># install.packages("remotes")</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"jchrom/dfprint"</span>)</a></code></pre></div>
+<p>Get <code>dfprint</code> from <a href="https://github.com/">GitHub</a>:</p>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("remotes")</span>
+<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"jchrom/dfprint"</span>)</pre></div>
 </div>
-<div id="how-does-it-print" class="section level2">
+<div id="how-it-prints" class="section level2">
 <h2 class="hasAnchor">
-<a href="#how-does-it-print" class="anchor"></a>How does it print</h2>
+<a href="#how-it-prints" class="anchor"></a>How it prints</h2>
 <p><code>dfprint</code> includes text formatting, additional information such as type/class of variables, robust printing of list columns, better use of screen-estate, and better handling of some exotic phenomena such as list columns with symbol elements or 2-d columns.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dfprint)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; Registered S3 method overwritten by 'dfprint':</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;   method           from</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt;   print.data.frame base</span></a></code></pre></div>
-<p>The readme files on GitHub do not seem to support ANSI formatting, so you better be viewing this page on the package website.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">iris2 =<span class="st"> </span>iris[<span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample.int</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(iris), <span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(iris)), ]</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">iris2</a></code></pre></div>
-<pre class="fansi fansi-output"><code>#&gt; <span style="color: #949494;"># data.frame 150 rows, 5 columns (7.7 Kb)</span><span> 
-#&gt; </span><span style="color: #949494;font-style: italic;">   </span><span> </span><span style="font-weight: bold;">Sepal.Length</span><span> </span><span style="font-weight: bold;">Sepal.Width</span><span> </span><span style="font-weight: bold;">Petal.Length</span><span> </span><span style="font-weight: bold;">Petal.Width</span><span> </span><span style="font-weight: bold;">     Species</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;">   </span><span> </span><span style="color: #949494;font-style: italic;">         dbl</span><span> </span><span style="color: #949494;font-style: italic;">        dbl</span><span> </span><span style="color: #949494;font-style: italic;">         dbl</span><span> </span><span style="color: #949494;font-style: italic;">        dbl</span><span> </span><span style="color: #949494;font-style: italic;">      factor</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;"> 68</span><span>          5.8         2.7          4.1         1.0 versicolor</span><span style="color: #949494;">|2</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;">129</span><span>          6.4         2.8          5.6         2.1  virginica</span><span style="color: #949494;">|3</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;"> 43</span><span>          4.4         3.2          1.3         0.2     setosa</span><span style="color: #949494;">|1</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;"> 14</span><span>          4.3         3.0          1.1         0.1     setosa</span><span style="color: #949494;">|1</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;"> 51</span><span>          7.0         3.2          4.7         1.4 versicolor</span><span style="color: #949494;">|2</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;"> 85</span><span>          5.4         3.0          4.5         1.5 versicolor</span><span style="color: #949494;">|2</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;"> 21</span><span>          5.4         3.4          1.7         0.2     setosa</span><span style="color: #949494;">|1</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;">106</span><span>          7.6         3.0          6.6         2.1  virginica</span><span style="color: #949494;">|3</span><span>
-#&gt; </span><span style="color: #949494;font-style: italic;"> 74</span><span>          6.1         2.8          4.7         1.2 versicolor</span><span style="color: #949494;">|2</span><span>
-#&gt; </span><span style="color: #949494;"># showing 9 rows out of 150</span><span>
-</span></code></pre>
-<p>See <code><a href="articles/print-data-frames.html">vignette("print-data-frames")</a></code> for more examples and additional info.</p>
+<p>Chck out <code><a href="articles/print-data-frames.html">vignette("print-data-frames")</a></code> to see how it prints (and why).</p>
 </div>
 <div id="dependencies" class="section level2">
 <h2 class="hasAnchor">
 <a href="#dependencies" class="anchor"></a>Dependencies</h2>
-<p>Only what comes with base R. If your terminal does not fully support ANSI strings, use <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> to disable offending features, eg. <code><a href="https://rdrr.io/r/base/options.html">options(dfprint_strong = FALSE)</a></code>.</p>
+<p>Only what comes with base R. If your terminal does not fully support ANSI strings, you may want to use <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> to disable offending features, eg. <code><a href="https://rdrr.io/r/base/options.html">options(dfprint_strong = FALSE)</a></code>.</p>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
@@ -153,7 +131,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

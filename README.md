@@ -28,8 +28,7 @@ type/class of variables, robust printing of list columns, better use of
 screen-estate, and better handling of some exotic phenomena such as list
 columns with symbol elements or 2-d columns.
 
-The readme files on GitHub do not seem to support ANSI formatting, so
-you better be viewing this page on the package website.
+Chck out `vignette("print-data-frames")` to see how it prints (and why).
 
 ## Dependencies
 
