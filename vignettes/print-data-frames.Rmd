@@ -14,21 +14,20 @@ old.hooks <- fansi::set_knit_hooks(knitr::knit_hooks)
 options(width = 80)
 ```
 
-**"But data frames already have a print method!"**
+*But data frames already have a print method!*
 
-They do. But it falls short in a few few well-known respects which, at least
-in part, motivated the "Tidyverse" folks to reimagine data frames altogether.
-I'm going to go through these issues in order (of how much they annoy me).
+They do. But it falls short in a few ways which motivated people to reimagine
+data frames altogether (AKA tibbles).
 
 **1. Large data frames print poorly.** Tinkering with `[[` and `head()` is not
-fun. Lists of data frames may even hang R when printed in full.
+fun. Lists of data frames hanged R for me before when printed.
 
 **2. Lack of metadata.** These are typically obtained by `str()`, `dim()` and
 `object.size()`, at the cost of additional typing and scrolling, as the original
-output gets displaced by the subsequent calls.
+output gets displaced by subsequent calls.
 
-**3. Too plain.** Less is not always more. ANSI formatting would help to tell 
-apart factor from character, lists from atomic vectors etc.
+**3. Too plain.** Less is not always more. Formatting would help to distinguish
+factor from character, lists from atomic vectors etc.
 
 **4. Valid inputs can produce an error.** For example:
 
@@ -42,7 +41,8 @@ df
 ```
 
 The above is a data frame that cannot be printed because its list column `li`
-includes symbol elements. Not a frequent use case, but should be handled as well.
+includes symbol elements for which there is no formatting method. (EDIT: This
+has been fixed in R 4.0.0.)
 
 **5. And then there is this:** Data frames can have columns which themselves are
 dataframes (or matrices or arrays). One place where you can see this is when you
@@ -51,7 +51,7 @@ the printout below which columns belong to the data frame column?
 
 ```{r}
 df_parent = data.frame(x = 1:2, child.y = letters[1:2])
-df_child  = data.frame(y = LETTERS[1:2], z = 2:3)
+df_child  = data.frame(y = LETTERS[1:2], z = 2:3, stringsAsFactors = FALSE)
 
 # Add child data frame as a column to the parent.
 df_parent$child = df_child
@@ -64,47 +64,40 @@ df_parent
 ```
 
 There is no way of telling that the first `child.y` is a regular column, while
-the rest belongs to the child data frame. The "dot syntax" just does not help.
+the rest belongs to the child data frame.
 
-Burn it all down
-----------------
+What to do
+----------
 
-Using *[tibbles](https://tibble.tidyverse.org/articles/tibble.html#tibbles-vs-data-frames)*
-solves these problems nicely, but not for data frames. Thus, if you want to use
-their nice print method, you have to first coerce your data frame into a tibble.
-This is something you may not always want, be it because tibbles behave
-in a slightly different way than data frames, or because some R functions expect
-a data frame. If you don't mind that, you can do this for usage in interactive
-sessions:
+I often find myself doing this:
 
 ```r
 print.data.frame = function(df) print(tibble::as_tibble(df))
 rm(print.data.frame) # when you no longer need it
 ```
 
-Note that this will fail when POSIXlt columns are present, and will drop row
-names.
+But this will fail when POSIXlt columns are present, and will drop rownames.
+Plus there is a risk that something unexpected may happen during the coercion to
+tibble and ending up misinforming the user.
 
-If you don't want to go the tibble route, the *dfprint* package is your friend.
-Just load it in the usual way, and data frames will print nicely until you
-detach it.
+Overloaded!
+-----------
+
+So I wrote a package that overloads the `base::print.data.frame` method:
 
 ```{r}
 library(dfprint)
 ```
 
-Ah yes, it does overload the base print method for data frames.
+This has its downsides, eg. it will never be on CRAN. But it makes it easier to
+use - just load the package and your data frames will print nicely untill you
+unload it or restart R.
 
-Is it worth it?
----------------
-
-I let you decide. In the meantime, let's have a look at how it prints. Here is
-the `iris` data set with scrambled rows. I scrambled the rows so you can see
-the factor ordering properly:
+How does it print?
 
 ```{r}
 set.seed(1)
-iris2 = iris[sample.int(nrow(iris)), ]
+iris2 = iris[sample.int(nrow(iris)), ] #scramble the rows
 iris2
 ```
 
@@ -118,21 +111,22 @@ Things to point out:
   columns (POSIXct and POSIXlt) also show the timezone.
   
 * Factors display their underlying integer values to make their ordering a bit
-  more obvious. This may be useful for eg. plotting.
+  more obvious (see the `Species` column). This is useful for plotting.
   
 * The footer is telling you how many rows are displayed. If you need more, use
-  the the `n` argument, eg, `print(iris2, n = 20)`. Use `Inf` to print all rows.
+  the `n` argument, eg, `print(iris2, n = 20)`. Use `Inf` to print all rows.
   
 When a data frame is bit wider, the names and summaries of the overflowing
-columns are displayed below.
+columns are displayed in the footer.
 
 ```{r}
 set.seed(1)
+# Produce more columns
 iris3 = iris2[, sample.int(ncol(iris2), 8, replace = TRUE)]
 iris3
 ```
 
-Row names are preserved:
+Unlike with tibbles, rownames are preserved:
 
 ```{r}
 mtcars[1:4, ]
@@ -180,7 +174,7 @@ features, or `dfprint_enable = FALSE` to revert back to base print method.
 Using dfprint in other packages
 -------------------------------
 
-The downside of overloading the base print method is that the R CMD check returns
+The downside of overloading base print method is that the R CMD check returns
 a warning. This means that *dfprint* will never make it to CRAN. If you want your
 package to be on CRAN, importing *dfprint* is probably not an option.
 On the other hand, if you are happy with people getting your package from GitHub,
@@ -191,10 +185,5 @@ and *utils*). And while it is true that more dependencies is not always bad, it
 is [worth thinking about](https://www.tidyverse.org/blog/2019/05/itdepends/). In
 that regard, *dfprint* is a lean and leightweight choice.
 
-Interactive use has much fewer constraints. I find myself using it all the time
-when inspecting data frames, without necessarily including it as a dependency
-in my projects.
-
-```{r}
-sessionInfo()
-```
+I find myself using it all the time when inspecting data frames, without
+necessarily including it as a dependency in my projects.
