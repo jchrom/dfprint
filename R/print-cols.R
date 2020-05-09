@@ -1,3 +1,11 @@
+# Print Column Names
+#
+# Print column names in the footer.
+#
+# @param x Data frame.
+# @param start_from Which column to start from.
+# @param n_extra How many column names to print in full.
+
 print_cols = function(x, start_from = 1, n_extra = 20) {
 
   if (ncol(x) == 0) return(invisible(x))
@@ -10,7 +18,7 @@ print_cols = function(x, start_from = 1, n_extra = 20) {
   additional = if (start_from > 1) " additional"
 
   if (length(cols) > n_extra) {
-    plus_more = paste0(" +", length(cols) - n_extra, " more")
+    plus_more = paste0("+", length(cols) - n_extra, " more")
   } else {
     plus_more = NULL
   }
@@ -18,12 +26,20 @@ print_cols = function(x, start_from = 1, n_extra = 20) {
   text = paste0("# ", length(cols), additional, " column", plural(length(cols)),
                 ":")
 
-  if (has_color()) {
-    cols = subtle_gsub(cols, "(\\(.+\\)$)")
-    text = format_subtle(text)
-  }
+  if (n_extra > 0) {
 
-  lines = paste(c(text, cols, plus_more), collapse = " ")
+    if (has_color()) {
+      cols = subtle_gsub(cols, "(\\(.+\\)$)")
+      text = format_subtle(text)
+    }
+
+    lines = paste(c(text, cols[seq(n_extra)], plus_more), collapse = " ")
+
+  } else {
+
+    lines = paste(c(text, plus_more), collapse = " ")
+
+  }
 
   cat(lines, sep = "")
 
